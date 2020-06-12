@@ -1,0 +1,2570 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf100
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red30\green32\blue40;\red65\green182\blue69;\red198\green124\blue72;
+\red219\green44\blue56;\red178\green24\blue137;\red255\green255\blue255;\red120\green109\blue196;\red131\green192\blue87;
+}
+{\*\expandedcolortbl;;\csgenericrgb\c11800\c12500\c15700;\csgenericrgb\c25500\c71400\c27000;\csgenericrgb\c77800\c48800\c28400;
+\csgenericrgb\c85900\c17100\c21900;\csgenericrgb\c69800\c9500\c53600;\csgenericrgb\c100000\c100000\c100000;\csgenericrgb\c46900\c42600\c77000;\csgenericrgb\c51200\c75400\c34300;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \cb2 \
+\pard\tx543\pardeftab543\pardirnatural\partightenfactor0
+
+\f1\fs22 \cf3 //
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 // Disclaimer:
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 // ----------
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 //
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 // This code will work only if you selected window, graphics and audio.
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 //
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 // Note that the "Run Script" build phase will copy the required frameworks
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 // or dylibs to your application bundle so you can execute it on any OS X
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 // computer.
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 //
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 // Your resource files (images, sounds, fonts, ...) are also copied to your
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 // application bundle. To get the path to these resources, use the helper
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 // function `resourcePath()` from ResourcePath.hpp
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 //
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf4 #include \cf5 <SFML/Audio.hpp>
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf4 #include \cf5 <SFML/Graphics.hpp>
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf4 #include\cf5 <iostream>
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf4 #include\cf5 <stdio.h>
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf4 #include \cf5 <cmath>
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf4 #include \cf5 <fstream>
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf4 #include \cf5 <string>
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf4 #include \cf5 "ResourcePath.hpp"
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf6 using\cf7  \cf6 namespace\cf7  std;
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf3 //global file accessing variables
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 ofstream outfile(\cf5 "test.txt"\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 ifstream infile(\cf5 "test.txt"\cf7 );
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf3 //global variable for window size
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf6 int\cf7  windowx= \cf8 1440\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf6 int\cf7  windowy=\cf8 900\cf7 ;
+\f0\fs24 \cf0 \
+\
+\
+
+\f1\fs22 \cf6 class\cf7  fileedit
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf6 private\cf7 :
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     string str1,str2,str3,name,id,password;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  found=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf6 public\cf7 :
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //parameterised constructor
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     fileedit(string a, string b, string c)
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         id=a;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         password=b;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         name=c;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         outfile<<id<<\cf5 " "\cf7 <<password<<\cf5 " "\cf7 <<name<<endl;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 int\cf7  check(string str, string str0); \cf3 //read data
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     string givename(); \cf3 //to get name
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 void\cf7  addvalues(string stt1, string stt2, string stt3); \cf3 //to add values
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     ~fileedit()
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         outfile.close();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 \};
+\f0\fs24 \cf0 \
+\
+\
+
+\f1\fs22 \cf3 //to check email
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf6 int\cf7  fileedit::check(string str, string str0)
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     found=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 while\cf7 ( infile.good() ) \cf3 //unitl no errors encountered
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //for file redaing
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         infile>>str1>>str2>>str3;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \cf6 if\cf7  (str1==str) \cf3 //check email
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf6 if\cf7 (str2==str0) \cf3 //check password
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 found=\cf6 true\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 break\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //claer file stream
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     infile.clear();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     infile.seekg(\cf8 0\cf7 , ios::beg);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //return found 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 return\cf7  found;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 \}
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf3 //to get name
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 string fileedit::givename()
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 return\cf7  str3;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 \}
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf3 //to add values
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf6 void\cf7  fileedit::addvalues(string stt1, string stt2, string stt3)
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     id=stt1;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     password=stt2;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     name=stt3;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     outfile<<id<<\cf5 " "\cf7 <<password<<\cf5 " "\cf7 <<name<<endl;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 \}
+\f0\fs24 \cf0 \
+\
+\
+
+\f1\fs22 \cf6 int\cf7  main(\cf6 int\cf7 , \cf6 char\cf7  \cf6 const\cf7 **)
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     fileedit f1(\cf5 "sardar10"\cf7 ,\cf5 "macdonalds"\cf7 ,\cf5 "sardar"\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     f1.addvalues(\cf5 "hasr4"\cf7 , \cf5 "ena"\cf7 , \cf5 "amina"\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 int\cf7  n,temp1=\cf8 0\cf7 ,temp2=\cf8 0.\cf7 ,temp3=\cf8 0\cf7 ;
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf7     \cf3 //main window
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RenderWindow window(sf::VideoMode(windowx, windowy), \cf5 "SFML window"\cf7 );
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf7     \cf3 //load fonts
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Font font;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 if\cf7  (!font.loadFromFile(resourcePath() + \cf5 "Papyrus.ttc"\cf7 )) \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \cf6 return\cf7  EXIT_FAILURE;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Font font2;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 if\cf7  (!font2.loadFromFile(resourcePath() + \cf5 "Microsoft Sans Serif.ttf"\cf7 )) \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \cf6 return\cf7  EXIT_FAILURE;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //startinng page text
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text text(\cf5 "ICARUS"\cf7 , font, \cf8 100\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     text.setPosition(\cf8 580\cf7 , \cf8 380\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Color colorxgate(\cf8 165\cf7 ,\cf8 42\cf7 ,\cf8 42\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     text.setFillColor(colorxgate);
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf7     \cf3 // Load a music to play
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Music music;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 if\cf7  (!music.openFromFile(resourcePath() + \cf5 "nice_music.ogg"\cf7 )) \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \cf6 return\cf7  EXIT_FAILURE;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \}
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf7     \cf3 // Play the music
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     music.play();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 // Load a sprite to display
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Texture texture;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 if\cf7  (!texture.loadFromFile(resourcePath() + \cf5 "startbackground1.jpg"\cf7 )) \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \cf6 return\cf7  EXIT_FAILURE;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Sprite startup;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     startup.setTexture(texture);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Texture mainuse;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 if\cf7  (!mainuse.loadFromFile(resourcePath() + \cf5 "background.jpg"\cf7 )) \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \cf6 return\cf7  EXIT_FAILURE;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Sprite main;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     main.setTexture(mainuse);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //second page
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Texture texture1;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 if\cf7  (!texture1.loadFromFile(resourcePath() + \cf5 "background_gradient.jpg"\cf7 )) \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \cf6 return\cf7  EXIT_FAILURE;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Sprite secondpage;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     secondpage.setTexture(texture1);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7    \cf3 //start clock
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Clock clock;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Time elapsed1 = clock.getElapsedTime();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text input
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::String userInput=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text inputtext(\cf5 "Please enter your ID"\cf7 ,font2,\cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     inputtext.setPosition(\cf8 200\cf7 , \cf8 70\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //id input box
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RectangleShape rectangle(sf::Vector2f(\cf8 500.f\cf7 , \cf8 35.f\cf7 ));
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle.setFillColor(sf::Color::White);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Color colorrectangleoutside(\cf8 0\cf7 , \cf8 191\cf7  ,\cf8 255\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle.setOutlineColor(colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle.setPosition(inputtext.getGlobalBounds().left + inputtext.getGlobalBounds().width +\cf8 20\cf7 , inputtext.getGlobalBounds().top);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle.setOutlineThickness(\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf7    \cf3 //set position of ID entered
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text IDinput(\cf5 ""\cf7 ,font2,\cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     IDinput.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     IDinput.setPosition(\cf8 560\cf7 ,\cf8 70\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //string for Password
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text Passwordcall(\cf5 "Enter Password"\cf7 ,font2,\cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     Passwordcall.setPosition(\cf8 200\cf7 , \cf8 400\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //to store password
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::String userInput2=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text  Password(\cf5 ""\cf7 ,font2,\cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     Password.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     Password.setPosition(\cf8 510\cf7 ,\cf8 395\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //passwsord input box
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RectangleShape rectangle2(sf::Vector2f(\cf8 500.f\cf7 , \cf8 35.f\cf7 ));
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle2.setFillColor(sf::Color::White);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle2.setOutlineColor(colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7       rectangle2.setPosition(Passwordcall.getGlobalBounds().left + Passwordcall.getGlobalBounds().width +\cf8 20\cf7 , Passwordcall.getGlobalBounds().top);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle2.setOutlineThickness(\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //welcome text
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text welcome(\cf5 "Welcome to ICARUS systems"\cf7 , font2, \cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     welcome.setPosition(\cf8 480\cf7 , \cf8 850\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Color colorwelcome(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     welcome.setFillColor(colorwelcome);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //welcome text outputted
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text welcomename (\cf5 "Welcome, "\cf7 ,font2, \cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7      sf::Color namecolor(\cf8 0\cf7 ,\cf8 0\cf7 ,\cf8 205\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     welcomename.setFillColor(namecolor);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     welcomename.setPosition(\cf8 590\cf7 , \cf8 850\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //name of user
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::String name=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text name1 (\cf5 ""\cf7 ,font2, \cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     name1.setFillColor(namecolor);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     name1.setPosition(\cf8 750\cf7 ,\cf8 850\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //if wrong details entered
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text wrongentry (\cf5 "please enter your details again"\cf7 ,font2,\cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     wrongentry.setColor(sf::Color::Red);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     wrongentry.setPosition(\cf8 200\cf7 ,\cf8 10\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text for choice
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text options (\cf5 "Choose your option"\cf7 ,font2,\cf8 45\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     options.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     options.setPosition(\cf8 200\cf7  ,\cf8 50\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     options.setStyle(sf::Text::Bold);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text for transaction
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text transaction (\cf5 "Transaction"\cf7 , font2, \cf8 45\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     transaction.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     transaction.setPosition(\cf8 200\cf7 , \cf8 200\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //rectangle for transaction
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RectangleShape rectransaction(sf::Vector2f(transaction.getGlobalBounds().width + \cf8 15\cf7  , transaction.getGlobalBounds().height+\cf8 15\cf7 ));
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //222
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Color colorpage2box (\cf8 176\cf7 ,\cf8 196\cf7 ,\cf8 200\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectransaction.setFillColor(colorpage2box);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectransaction.setOutlineColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectransaction.setPosition(transaction.getGlobalBounds().left-\cf8 10\cf7 ,transaction.getGlobalBounds().top-\cf8 10\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectransaction.setOutlineThickness(\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text for special queue
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text specialqueue (\cf5 "Special queue"\cf7 ,font2, \cf8 45\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     specialqueue.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     specialqueue.setPosition(\cf8 200\cf7 , \cf8 400\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //rectangle for special queue
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RectangleShape recspecialqueue(sf::Vector2f(specialqueue.getGlobalBounds().width + \cf8 15\cf7  , specialqueue.getGlobalBounds().height+\cf8 10\cf7 ));
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recspecialqueue.setFillColor(colorpage2box);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recspecialqueue.setOutlineColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recspecialqueue.setPosition(specialqueue.getGlobalBounds().left-\cf8 10\cf7 , specialqueue.getGlobalBounds().top-\cf8 10\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recspecialqueue.setOutlineThickness(\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text for back to login
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text backtologin (\cf5 "Back to login"\cf7 , font2, \cf8 45\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     backtologin.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     backtologin.setPosition(\cf8 200\cf7 , \cf8 600\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //rectangle for back to login
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RectangleShape recbacktologin (sf::Vector2f(backtologin.getGlobalBounds().width +\cf8 15\cf7  , backtologin.getGlobalBounds().height+\cf8 10\cf7 ));
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recbacktologin.setFillColor(colorpage2box);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recbacktologin.setOutlineColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recbacktologin.setPosition(backtologin.getGlobalBounds().left-\cf8 10\cf7 ,backtologin.getGlobalBounds().top-\cf8 10\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recbacktologin.setOutlineThickness(\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text for asterick password
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::String ast;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text asterick (\cf5 ""\cf7 ,font2,\cf8 45\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     asterick.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     asterick.setPosition(\cf8 510\cf7 ,\cf8 395\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text for old man
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text oldman (\cf5 "Old man"\cf7 ,font2, \cf8 45\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     oldman.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     oldman.setPosition(\cf8 200\cf7 , \cf8 200\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //rectangle for old man
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RectangleShape recoldman (sf::Vector2f(oldman.getGlobalBounds().width +\cf8 15\cf7  , oldman.getGlobalBounds().height+\cf8 15\cf7 ));
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recoldman.setFillColor(colorpage2box);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recoldman.setOutlineColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recoldman.setPosition(oldman.getGlobalBounds().left-\cf8 10\cf7 , oldman.getGlobalBounds().top -\cf8 10\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recoldman.setOutlineThickness(\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text for woman
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text woman (\cf5 "Woman"\cf7 ,font2, \cf8 45\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     woman.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     woman.setPosition(\cf8 200\cf7 , \cf8 400\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //rectangle for woman
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RectangleShape recwoman (sf::Vector2f(woman.getGlobalBounds().width +\cf8 15\cf7  , woman.getGlobalBounds().height+\cf8 15\cf7 ));
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recwoman.setFillColor(colorpage2box);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recwoman.setOutlineColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recwoman.setPosition(woman.getGlobalBounds().left-\cf8 10\cf7 ,woman.getGlobalBounds().top-\cf8 10\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     recwoman.setOutlineThickness(\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text for transgender
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text transgender (\cf5 "Transgender"\cf7 ,font2, \cf8 45\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     transgender.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     transgender.setPosition(\cf8 200\cf7 , \cf8 600\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //rectangle for old man
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RectangleShape rectransgender (sf::Vector2f(transgender.getGlobalBounds().width +\cf8 15\cf7  , transgender.getGlobalBounds().height+\cf8 10\cf7 ));
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectransgender.setFillColor(colorpage2box);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectransgender.setOutlineColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectransgender.setPosition(transgender.getGlobalBounds().left-\cf8 10\cf7 ,transgender.getGlobalBounds().top-\cf8 10\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectransgender.setOutlineThickness(\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text for asking of account number
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text accountno(\cf5 "Please enter your account number"\cf7 , font2, \cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     accountno.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     accountno.setPosition(\cf8 200\cf7 , \cf8 70\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //to store account number
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::String acc;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf:: Text accno (\cf5 ""\cf7 ,font2,\cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     accno.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     accno.setPosition(accountno.getGlobalBounds().left + accountno.getGlobalBounds().width + \cf8 20\cf7 , accountno.getGlobalBounds().top-\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //rectangle for account number
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RectangleShape rectangle3(sf::Vector2f(\cf8 500.f\cf7 , \cf8 35.f\cf7 ));
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle3.setFillColor(sf::Color::White);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle3.setOutlineColor(colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle3.setPosition(accountno.getGlobalBounds().left + accountno.getGlobalBounds().width +\cf8 20\cf7 , accountno.getGlobalBounds().top);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle3.setOutlineThickness(\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //text for pin no
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::Text pinno(\cf5 "Enter PIN"\cf7 ,font2, \cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     pinno.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     pinno.setPosition(\cf8 200\cf7 , \cf8 400\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //to store account number
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::String pin;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf:: Text pinnumber (\cf5 ""\cf7 ,font2,\cf8 35\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     pinnumber.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     pinnumber.setPosition(pinno.getGlobalBounds().left + pinno.getGlobalBounds().width + \cf8 20\cf7 , pinno.getGlobalBounds().top-\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //rectangle for pin number
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     sf::RectangleShape rectangle4(sf::Vector2f(\cf8 500.f\cf7 , \cf8 35.f\cf7 ));
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle4.setFillColor(sf::Color::White);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle4.setOutlineColor(colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle4.setPosition(pinno.getGlobalBounds().left + pinno.getGlobalBounds().width +\cf8 20\cf7 , pinno.getGlobalBounds().top);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     rectangle4.setOutlineThickness(\cf8 5\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf3 //boolean variables
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  areIDentered= \cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  arepasswordentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  toproceed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  verified=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  wrongentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  transactionspressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  specialqpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  backtologinpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  tranaction=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  oldmanpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  womanpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  transpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  ispinentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 bool\cf7  accountentered = \cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7      \cf3 // Start the game loop
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7       \cf6 while\cf7  (window.isOpen())
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7       \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \cf3 // Process events
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         sf::Event event;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \cf6 while\cf7  (window.pollEvent(event))
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 // Close window: exit
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf6 if\cf7  (event.type == sf::Event::Closed) \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 window.close();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 // Escape pressed: exit
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf6 if\cf7  (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 window.close();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 //for password input
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf6 if\cf7 ( areIDentered==\cf6 true\cf7  && event.type == sf::Event::TextEntered && arepasswordentered==\cf6 false\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //password box location
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 rectangle2.setPosition(Passwordcall.getGlobalBounds().left + Passwordcall.getGlobalBounds().width +\cf8 20\cf7 , Passwordcall.getGlobalBounds().top);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 Password.setPosition(rectangle2.getGlobalBounds().left + \cf8 10\cf7 , rectangle2.getGlobalBounds().top);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //asterick position set
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 asterick.setPosition(rectangle2.getGlobalBounds().left + \cf8 10\cf7 , rectangle2.getGlobalBounds().top);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //restrict entry of password
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 if\cf7  (event.text.unicode == \cf8 10\cf7  && areIDentered==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     arepasswordentered=\cf6 true\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf3 //139,137,137
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     sf::Color colorrectangleoutside2(\cf8 139\cf7 , \cf8 137\cf7 ,\cf8 137\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     rectangle2.setOutlineColor(colorrectangleoutside2);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 if\cf7 (arepasswordentered==\cf6 false\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     userInput2 +=event.text.unicode;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     Password.setString(userInput2);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     ast=ast + \cf5 "*"\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     asterick.setString(ast);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 //mouse position
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             sf::Vector2f mousePosF( \cf6 static_cast\cf7 <\cf6 float\cf7 >( sf::Mouse::getPosition(window).x ), \cf6 static_cast\cf7 <\cf6 float\cf7 >( sf::Mouse::getPosition(window).y) );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 //to check for ID entered
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf6 if\cf7  (event.type == sf::Event::TextEntered && areIDentered==\cf6 false\cf7  && toproceed==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //id input text and box
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  rectangle.setPosition(inputtext.getGlobalBounds().left + inputtext.getGlobalBounds().width +\cf8 20\cf7 , inputtext.getGlobalBounds().top);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 IDinput.setPosition(rectangle.getGlobalBounds().left + \cf8 10\cf7 , rectangle.getGlobalBounds().top);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //restrict entry after enter is pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 if\cf7  (event.text.unicode == \cf8 10\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     areIDentered=\cf6 true\cf7 ;
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf7                     sf::Color colorrectangleoutside2(\cf8 139\cf7 ,\cf8 137\cf7 ,\cf8 137\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     rectangle.setOutlineColor(colorrectangleoutside2);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 if\cf7 (areIDentered==\cf6 false\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //check for in range variables
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    userInput +=event.text.unicode;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    IDinput.setString(userInput);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 //to recieve verification
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf6 if\cf7 (areIDentered==\cf6 true\cf7  && arepasswordentered==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 verified=f1.check(userInput, userInput2); \cf3 //check if id and password correct
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 if\cf7  (verified==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    name=f1.givename(); \cf3 //get name and store in string
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    name1.setString(name); \cf3 //store name in sf::text
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    wrongentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 else
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf3 //reset variables
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     userInput=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     userInput2=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     ast=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     pin=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     acc=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     accno.setString(acc);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     pinnumber.setString(pin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     asterick.setString(ast);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     Password.setString(userInput2);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     IDinput.setString(userInput);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     rectangle2.setOutlineColor(colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     rectangle.setOutlineColor(colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     rectangle3.setOutlineColor(colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     rectangle4.setOutlineColor(colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     arepasswordentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     areIDentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     wrongentered=\cf6 true\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     ispinentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     accountentered = \cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 //for button clicking on second page
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf6 if\cf7 (verified==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     sf::Vector2f mousePosF( \cf6 static_cast\cf7 <\cf6 float\cf7 >( sf::Mouse::getPosition(window).x ), \cf6 static_cast\cf7 <\cf6 float\cf7 >( sf::Mouse::getPosition(window).y) );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //if mouse over transaction text
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf6 if\cf7  (rectransaction.getGlobalBounds().contains( mousePosF ))
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         transaction.setFillColor(sf::Color::Red);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         \cf6 if\cf7 (event.mouseButton.button == sf::Mouse::Left)
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                             transactionspressed=\cf6 true\cf7 ; \cf3 //button pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf6 else
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                       transaction.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         transactionspressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 // set position of back to login text and box
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 backtologin.setPosition(\cf8 200\cf7 , \cf8 600\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 recbacktologin.setPosition(backtologin.getGlobalBounds().left-\cf8 10\cf7 ,backtologin.getGlobalBounds().top-\cf8 10\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //if mouse over back to login text
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 if\cf7  (recbacktologin.getGlobalBounds().contains( mousePosF ))
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     backtologin.setFillColor(sf::Color::Red);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf6 if\cf7 (event.mouseButton.button == sf::Mouse::Left)
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         backtologinpressed=\cf6 true\cf7 ; \cf3 //button pressed
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 else
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     backtologin.setFillColor(sf::Color::Black);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     backtologinpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //if mouse over special queue text
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 if\cf7  (recspecialqueue.getGlobalBounds().contains( mousePosF ))
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     specialqueue.setFillColor(sf::Color::Red);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf6 if\cf7 (event.mouseButton.button == sf::Mouse::Left)
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         specialqpressed=\cf6 true\cf7 ; \cf3 //button pressed
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 else
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     specialqueue.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Black\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     specialqpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 //if back to login is pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf6 if\cf7  (backtologinpressed==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //reset variables
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 userInput=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 userInput2=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 ast=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 pin=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 acc=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 accno.\cf9 setString\cf7 (acc);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 pinnumber.\cf9 setString\cf7 (pin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 asterick.\cf9 setString\cf7 (ast);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 Password.\cf9 setString\cf7 (userInput2);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 IDinput.\cf9 setString\cf7 (userInput);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 rectangle2.\cf9 setOutlineColor\cf7 (colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 rectangle.\cf9 setOutlineColor\cf7 (colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 rectangle3.\cf9 setOutlineColor\cf7 (colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 rectangle4.\cf9 setOutlineColor\cf7 (colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 arepasswordentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 areIDentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 wrongentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 verified=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 backtologinpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 transactionspressed= \cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 specialqpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 transpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 oldmanpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 womanpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 ispinentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 accountentered = \cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //password box location
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 rectangle2.\cf9 setPosition\cf7 (Passwordcall.\cf9 getGlobalBounds\cf7 ().\cf9 left\cf7  + Passwordcall.\cf9 getGlobalBounds\cf7 ().\cf9 width\cf7  +\cf8 20\cf7 , Passwordcall.\cf9 getGlobalBounds\cf7 ().\cf9 top\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 Password.\cf9 setPosition\cf7 (rectangle2.\cf9 getGlobalBounds\cf7 ().\cf9 left\cf7  + \cf8 10\cf7 , rectangle2.\cf9 getGlobalBounds\cf7 ().\cf9 top\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //id input text and box
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 rectangle.\cf9 setPosition\cf7 (inputtext.\cf9 getGlobalBounds\cf7 ().\cf9 left\cf7  + inputtext.\cf9 getGlobalBounds\cf7 ().\cf9 width\cf7  +\cf8 20\cf7 , inputtext.\cf9 getGlobalBounds\cf7 ().\cf9 top\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 IDinput.\cf9 setPosition\cf7 (rectangle.\cf9 getGlobalBounds\cf7 ().\cf9 left\cf7  + \cf8 10\cf7 , rectangle.\cf9 getGlobalBounds\cf7 ().\cf9 top\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 //if transaction pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf6 if\cf7 (transactionspressed==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //reset variables
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 userInput=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 userInput2=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 ast=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 //                pin="";
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 //                acc="";
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 //                accno.setString(acc);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 //                pinnumber.setString(pin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 asterick.\cf9 setString\cf7 (ast);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 Password.\cf9 setString\cf7 (userInput2);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 IDinput.\cf9 setString\cf7 (userInput);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 rectangle2.\cf9 setOutlineColor\cf7 (colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 rectangle.\cf9 setOutlineColor\cf7 (colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 arepasswordentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 areIDentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 wrongentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 verified=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 backtologinpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 specialqpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 transpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 oldmanpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 womanpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //back to login text and box settings altered
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 backtologin.\cf9 setPosition\cf7 (\cf9 windowx\cf7 /\cf8 2\cf7  - backtologin.\cf9 getGlobalBounds\cf7 ().\cf9 width\cf7 /\cf8 2\cf7 , \cf8 780\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 recbacktologin.\cf9 setPosition\cf7 (backtologin.\cf9 getGlobalBounds\cf7 ().\cf9 left\cf7 -\cf8 10\cf7 ,backtologin.\cf9 getGlobalBounds\cf7 ().\cf9 top\cf7 -\cf8 10\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+\
+
+\f1\fs22 \cf7                 \cf3 //if mouse over back to login
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 if\cf7  (recbacktologin.\cf9 getGlobalBounds\cf7 ().\cf9 contains\cf7 ( mousePosF ))
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     backtologin.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Red\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf6 if\cf7 (event.\cf9 mouseButton\cf7 .\cf9 button\cf7  == \cf9 sf\cf7 ::\cf9 Mouse\cf7 ::\cf9 Left\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         backtologinpressed=\cf6 true\cf7 ; \cf3 //button pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 else
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     backtologin.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Black\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     backtologinpressed=\cf6 false\cf7 ; \cf3 //button notb pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //to enter pin number
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 if\cf7 (event.\cf9 type\cf7  == \cf9 sf\cf7 ::\cf9 Event\cf7 ::\cf9 TextEntered\cf7  && accountentered == \cf6 true\cf7  && ispinentered==\cf6 false\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf3 //store pin number
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf6 if\cf7 (ispinentered==\cf6 false\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         pin +=event.\cf9 text\cf7 .\cf9 unicode\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         pinnumber.\cf9 setString\cf7 (pin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf3 //restrict entry of pin number
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf6 if\cf7  (event.\cf9 text\cf7 .\cf9 unicode\cf7  == \cf8 10\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         ispinentered=\cf6 true\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         \cf9 sf\cf7 ::\cf9 Color\cf7  colorrectangleoutside2(\cf8 139\cf7 ,\cf8 137\cf7 ,\cf8 137\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         rectangle4.\cf9 setOutlineColor\cf7 (colorrectangleoutside2);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf3 //to store account number
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \cf6 if\cf7 (event.\cf9 type\cf7  == \cf9 sf\cf7 ::\cf9 Event\cf7 ::\cf9 TextEntered\cf7  && accountentered==\cf6 false\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf6 if\cf7 (accountentered==\cf6 false\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     acc +=event.\cf9 text\cf7 .\cf9 unicode\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     accno.\cf9 setString\cf7 (acc);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf3 //restrict entry of account number
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \cf6 if\cf7  (event.\cf9 text\cf7 .\cf9 unicode\cf7  == \cf8 10\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         accountentered=\cf6 true\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         \cf9 sf\cf7 ::\cf9 Color\cf7  colorrectangleoutside2(\cf8 139\cf7 ,\cf8 137\cf7 ,\cf8 137\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                         rectangle3.\cf9 setOutlineColor\cf7 (colorrectangleoutside2);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                 \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 //if special queue pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7          \cf6 if\cf7 ( specialqpressed==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7          \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf3 //reset variables
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              userInput=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              userInput2=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              ast=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              pin=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              acc=\cf5 ""\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              accno.\cf9 setString\cf7 (acc);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              pinnumber.\cf9 setString\cf7 (pin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              asterick.\cf9 setString\cf7 (ast);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              Password.\cf9 setString\cf7 (userInput2);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              IDinput.\cf9 setString\cf7 (userInput);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              rectangle2.\cf9 setOutlineColor\cf7 (colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              rectangle.\cf9 setOutlineColor\cf7 (colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              rectangle3.\cf9 setOutlineColor\cf7 (colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              rectangle4.\cf9 setOutlineColor\cf7 (colorrectangleoutside);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              arepasswordentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              areIDentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              wrongentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              verified=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              backtologinpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              transactionspressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              transpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              oldmanpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              womanpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              ispinentered=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              accountentered = \cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf3 //back to login text and box settings altered
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              backtologin.\cf9 setPosition\cf7 (\cf9 windowx\cf7 /\cf8 2\cf7  - backtologin.\cf9 getGlobalBounds\cf7 ().\cf9 width\cf7 /\cf8 2\cf7 , \cf8 780\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              recbacktologin.\cf9 setPosition\cf7 (backtologin.\cf9 getGlobalBounds\cf7 ().\cf9 left\cf7 -\cf8 10\cf7 ,backtologin.\cf9 getGlobalBounds\cf7 ().\cf9 top\cf7 -\cf8 10\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf3 //if mouse over old man
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf6 if\cf7  (recbacktologin.\cf9 getGlobalBounds\cf7 ().\cf9 contains\cf7 ( mousePosF ))
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  backtologin.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Red\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  \cf6 if\cf7 (event.\cf9 mouseButton\cf7 .\cf9 button\cf7  == \cf9 sf\cf7 ::\cf9 Mouse\cf7 ::\cf9 Left\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                      backtologinpressed=\cf6 true\cf7 ; \cf3 //button pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf6 else
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  backtologin.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Black\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  backtologinpressed=\cf6 false\cf7 ; \cf3 //button notb pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf6 if\cf7  (recoldman.\cf9 getGlobalBounds\cf7 ().\cf9 contains\cf7 ( mousePosF ))
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  oldman.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Red\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  \cf6 if\cf7 (event.\cf9 mouseButton\cf7 .\cf9 button\cf7  == \cf9 sf\cf7 ::\cf9 Mouse\cf7 ::\cf9 Left\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                      oldmanpressed=\cf6 true\cf7 ; \cf3 //button pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf6 else
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  oldman.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Black\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  transactionspressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf3 //if mouse over woman
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf6 if\cf7  (recwoman.\cf9 getGlobalBounds\cf7 ().\cf9 contains\cf7 ( mousePosF ))
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  woman.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Red\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  \cf6 if\cf7 (event.\cf9 mouseButton\cf7 .\cf9 button\cf7  == \cf9 sf\cf7 ::\cf9 Mouse\cf7 ::\cf9 Left\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                      womanpressed=\cf6 true\cf7 ; \cf3 //button pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf6 else
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  woman.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Black\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  womanpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf3 //if mouse over transgender
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf6 if\cf7  (rectransgender.\cf9 getGlobalBounds\cf7 ().\cf9 contains\cf7 ( mousePosF ))
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  transgender.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Red\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  \cf6 if\cf7 (event.\cf9 mouseButton\cf7 .\cf9 button\cf7  == \cf9 sf\cf7 ::\cf9 Mouse\cf7 ::\cf9 Left\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                      transpressed=\cf6 true\cf7 ; \cf3 //button pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \cf6 else
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  transgender.\cf9 setFillColor\cf7 (\cf9 sf\cf7 ::\cf9 Color\cf7 ::\cf9 Black\cf7 );
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                  transpressed=\cf6 false\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7              
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7          \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7         \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7           
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7           \cf3 // Clear screen
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7            window.\cf9 clear\cf7 ();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7           
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7           \cf3 //wait for startup page
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7            \cf6 if\cf7  (elapsed1.\cf9 asMilliseconds\cf7 ()<=\cf8 3000\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7            \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 // Draw the startup page
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7               window.\cf9 draw\cf7 (startup);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 // Draw the string
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7               window.\cf9 draw\cf7 (text);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \cf3 // Update the window
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             window.\cf9 display\cf7 ();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                elapsed1 = clock.\cf9 getElapsedTime\cf7 ();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7             \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7            \cf6 else
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7            \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                toproceed=\cf6 true\cf7 ;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                window.\cf9 clear\cf7 ();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf3 // Draw the main page
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                window.\cf9 draw\cf7 (main);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf3 //draw rectangle
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                window.\cf9 draw\cf7 (rectangle);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf3 // Draw the string
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                window.\cf9 draw\cf7 (inputtext);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                window.\cf9 draw\cf7 (IDinput);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf3 //draw welcome text
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                window.\cf9 draw\cf7 (welcome);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf3 // output the call to enter minterms
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf6 if\cf7 (areIDentered==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.\cf9 draw\cf7 (Passwordcall);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.\cf9 draw\cf7 (rectangle2);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.\cf9 draw\cf7 (asterick);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf3 //                   window.draw(Password);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf3 //if correct details entered
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf6 if\cf7 (verified==\cf6 true\cf7  && transactionspressed==\cf6 false\cf7  && specialqpressed==\cf6 false\cf7  && backtologinpressed==\cf6 false\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.\cf9 draw\cf7 (secondpage);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.\cf9 draw\cf7 (name1);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.\cf9 draw\cf7 (welcomename);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.\cf9 draw\cf7 (options);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.\cf9 draw\cf7 (rectransaction);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.\cf9 draw\cf7 (recbacktologin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.\cf9 draw\cf7 (recspecialqueue);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(transaction);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(specialqueue);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(backtologin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf3 //if wrong details entered
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf6 if\cf7 (wrongentered==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                     window.draw(wrongentry);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf3 //if transaction option choosen
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf6 if\cf7 (transactionspressed==\cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(secondpage);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(accountno);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(name1);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(welcomename);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(pinno);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(recbacktologin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(backtologin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(rectangle3);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(rectangle4);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(accno);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(pinnumber);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7               
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf3 //if special queue pressed
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf6 if\cf7 ( specialqpressed == \cf6 true\cf7 )
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \{
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(secondpage);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(name1);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(welcomename);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(recbacktologin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(backtologin);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(rectransgender);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(recwoman);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(recoldman);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(oldman);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(woman);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(transgender);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                    window.draw(options);
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                \cf3 // Update the window
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7                window.display();
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7            \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7           
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7      \}
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7     \cf6 return\cf7  EXIT_SUCCESS;
+\f0\fs24 \cf0 \
+
+\f1\fs22 \cf7 \}
+\f0\fs24 \cf0 \
+}
